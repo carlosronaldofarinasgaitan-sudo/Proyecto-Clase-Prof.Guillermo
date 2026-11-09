@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Hello Kitty: Sweet Nightmare</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Prompt para girar dispositivo a horizontal en móviles -->
+    <div id="rotate-device-prompt">
+        <div class="rotate-content">
+            <span class="rotate-icon">📱🔄</span>
+            <h2>Gira tu dispositivo</h2>
+            <p>Por favor orienta tu pantalla en modo horizontal (Landscape) para disfrutar la mejor experiencia.</p>
+        </div>
+    </div>
+
+    <!-- PANTALLA 0: BIENVENIDA Y CARGA INICIAL -->
+    <div id="welcome-screen" class="screen-view active">
+        <div class="welcome-card">
+            <div class="welcome-badge">🎀 HELLO KITTY: SWEET NIGHTMARE 😈</div>
+            <h1 class="welcome-title">¡Kitty Shelzy en el Averno!</h1>
+            
+            <!-- Dedicatoria solicitada exactamente -->
+            <div class="welcome-dedication-box">
+                <span class="dedication-heart">💖</span>
+                <p class="welcome-dedication">Bienvenidos al juego de Kitty Shelzy Proyecto de la clase de nuestro querido maestro Guillermo :)</p>
+                <span class="dedication-heart">✨</span>
+            </div>
+
+            <div class="welcome-mascot-row">
+                <span class="mascot-anim">🌸</span>
+                <span class="mascot-anim main">🐱🎀</span>
+                <span class="mascot-anim">🧁</span>
+                <span class="mascot-anim devil">😈🔥</span>
+            </div>
+
+            <!-- Barra de Carga Animada (0% a 100%) -->
+            <div class="welcome-loader-section">
+                <div class="welcome-progress-track">
+                    <div id="welcome-progress-fill" class="welcome-progress-fill" style="width: 0%;"></div>
+                </div>
+                <div class="welcome-progress-info">
+                    <span id="welcome-progress-status" class="welcome-progress-status">Cargando mundos pastel y portales del averno...</span>
+                    <span id="welcome-progress-percent" class="welcome-progress-percent">0%</span>
+                </div>
+
+                <!-- Botón para entrar al vestidor (Aparece al completar el 100%) -->
+                <button id="btn-enter-wardrobe" class="primary-play-btn welcome-enter-btn" style="display: none;">
+                    <span>¡ENTRAR AL VESTIDOR!</span>
+                    <span class="btn-subtext">Comienza a personalizar a Kitty Shelzy</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 1: VESTIDOR / DRESS-UP INTERACTIVO -->
+    <div id="dressup-screen" class="screen-view">
+        <header class="dressup-header">
+            <div class="logo-title">
+                <span class="logo-badge">HELLO KITTY: SWEET NIGHTMARE</span>
+                <h1 class="shelzy-main-title">Personaliza a Kitty Shelzy <span class="devil-sub">✨🎀😈</span></h1>
+                <p class="shelzy-subtitle">Crea el atuendo perfecto para explorar el mundo dulce y sobrevivir al Averno</p>
+            </div>
+            <div class="header-tools">
+                <button id="btn-toggle-sound" class="icon-tool-btn" title="Activar/Desactivar Sonido">🔊</button>
+            </div>
+        </header>
+
+        <main class="dressup-layout">
+            <!-- Columna Izquierda: Vista previa de Kitty -->
+            <section class="closet-preview-pane">
+                <div class="preview-pedestal">
+                    <canvas id="closet-kitty-preview" width="280" height="300"></canvas>
+                </div>
+                <div class="preview-actions">
+                    <button id="btn-randomize-kitty" class="secondary-btn">🎲 ¡Sorpresa!</button>
+                </div>
+                <div class="desktop-controls-tip">
+                    <p>⌨️ <strong>Teclas:</strong> Flechas / A-D (Mover), Espacio / W (Salto), Shift / E (Dimensión)</p>
+                </div>
+            </section>
+
+            <!-- Columna Derecha: Catálogo de Ropa y Accesorios -->
+            <section class="closet-wardrobe-pane">
+                <nav class="wardrobe-tabs">
+                    <button class="wardrobe-tab active" data-target="cat-head">🎀 Lazos</button>
+                    <button class="wardrobe-tab" data-target="cat-outfit">👗 Vestidos</button>
+                    <button class="wardrobe-tab" data-target="cat-acc">✨ Accesorios</button>
+                    <button class="wardrobe-tab" data-target="cat-fur">🎨 Pelaje</button>
+                </nav>
+
+                <div class="wardrobe-content-box">
+                    <!-- Categoría: Lazos y Gorros -->
+                    <div id="cat-head" class="wardrobe-category-content active">
+                        <h3>Accesorios para la Cabeza</h3>
+                        <div id="wardrobe-head-list" class="items-grid"></div>
+                    </div>
+
+                    <!-- Categoría: Ropa / Outfits -->
+                    <div id="cat-outfit" class="wardrobe-category-content">
+                        <h3>Trajes y Vestidos</h3>
+                        <div id="wardrobe-outfit-list" class="items-grid"></div>
+                    </div>
+
+                    <!-- Categoría: Accesorios en Mano / Espalda -->
+                    <div id="cat-acc" class="wardrobe-category-content">
+                        <h3>Objetos y Alas</h3>
+                        <div id="wardrobe-acc-list" class="items-grid"></div>
+                    </div>
+
+                    <!-- Categoría: Pelaje / Color de Kitty -->
+                    <div id="cat-fur" class="wardrobe-category-content">
+                        <h3>Tono y Estilo de Pelaje</h3>
+                        <div id="wardrobe-fur-list" class="items-grid"></div>
+                    </div>
+                </div>
+
+                <div class="wardrobe-play-footer">
+                    <button id="btn-start-adventure" class="primary-play-btn">
+                        <span>¡COMENZAR AVENTURA!</span>
+                        <span class="btn-subtext">Explora el mundo y sobrevive al Averno</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- PANTALLA 1.5: MAPA DE MUNDOS / SELECCIÓN DE NIVELES ESTILO SUPER MARIO BROS -->
+    <div id="level-select-screen" class="screen-view">
+        <header class="level-select-header">
+            <div class="map-title-box">
+                <span class="map-badge">🗺️ MAPA DE MUNDOS KAWAII 🎀</span>
+                <h1 class="map-title">Aventuras de Kitty Shelzy</h1>
+                <p class="map-subtitle">Elige un nivel para explorar, recoger cupcakes y superar el Averno</p>
+            </div>
+            <div class="map-stats-summary">
+                <div class="map-stat-pill" title="Estrellas Totales">
+                    <span class="icon">⭐</span>
+                    <span id="map-total-stars">0/15</span>
+                </div>
+                <div class="map-stat-pill highscore-pill" title="Récord Máximo">
+                    <span class="icon">🏆</span>
+                    <span id="map-high-score">0</span>
+                </div>
+                <button id="btn-map-goto-wardrobe" class="secondary-btn icon-text-btn" title="Volver al Vestidor">
+                    <span>👗</span>
+                    <span>Cambiar Outfit</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="world-map-container">
+            <div class="world-map-scroll">
+                <div id="world-map-nodes" class="world-map-nodes">
+                    <!-- Generado dinámicamente con los 5 niveles, estrellas, puntuación y estado de bloqueo -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- PANTALLA 2: JUEGO DE PLATAFORMAS 2D -->
+    <div id="game-screen" class="screen-view">
+        <!-- Canvas principal de juego -->
+        <div id="canvas-container">
+            <canvas id="game-canvas"></canvas>
+        </div>
+
+        <!-- HUD Superpuesto (Vidas, Puntos, Indicador de Dimensión, Récord) -->
+        <header id="game-hud">
+            <div class="hud-left">
+                <div id="hud-hearts-container" class="hud-hearts">
+                    <!-- Generado dinámicamente: 🎀 🎀 🎀 -->
+                </div>
+                <div class="hud-score-pill" title="Puntuación Actual">
+                    <span class="icon">🧁</span>
+                    <span id="hud-score-value">0</span>
+                </div>
+                <div class="hud-highscore-pill" title="Récord Máximo Histórico">
+                    <span class="icon">🏆</span>
+                    <span id="hud-highscore-value">0</span>
+                </div>
+            </div>
+
+            <div class="hud-center">
+                <div id="hud-level-badge" class="level-badge">
+                    Nivel 1: El Despertar Kawaii
+                </div>
+
+                <!-- Barra de Progreso del Nivel en tiempo real -->
+                <div class="hud-progress-wrapper" title="Progreso del nivel">
+                    <span class="hud-progress-flag start-flag" title="Inicio">🚩</span>
+                    <div class="hud-progress-track">
+                        <div id="hud-progress-fill" class="hud-progress-fill" style="width: 0%;"></div>
+                        <div id="hud-progress-marker" class="hud-progress-marker" style="left: 0%;">🎀</div>
+                    </div>
+                    <span class="hud-progress-flag end-flag" title="Meta">🏁</span>
+                    <span id="hud-progress-percent" class="hud-progress-percent">0%</span>
+                </div>
+
+                <div id="hud-dimension-badge" class="dimension-badge cute-theme">
+                    🌸 MUNDO KAWAII ✨
+                </div>
+            </div>
+
+            <div class="hud-right">
+                <button class="btn-goto-map hud-icon-btn" title="Mapa de Mundos">🗺️</button>
+                <button class="btn-goto-wardrobe hud-icon-btn" title="Ir al Vestidor">👗</button>
+            </div>
+        </header>
+
+        <!-- CONTROLES TÁCTILES RESPONSIVOS PARA MÓVIL (OVERLAY) -->
+        <div id="touch-controls-overlay">
+            <!-- D-Pad Izquierdo: Movimiento Horizontal -->
+            <div class="touch-group touch-dpad">
+                <button id="btn-touch-left" class="touch-btn touch-dir" aria-label="Izquierda">
+                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+                <button id="btn-touch-right" class="touch-btn touch-dir" aria-label="Derecha">
+                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </button>
+            </div>
+
+            <!-- Botones de Acción Derechos: Dimensión y Salto -->
+            <div class="touch-group touch-actions">
+                <button id="btn-touch-shift" class="touch-btn touch-action-sub" aria-label="Cambiar Dimensión">
+                    <span class="touch-btn-icon">🌀</span>
+                    <span class="touch-btn-tag">CAMBIAR</span>
+                </button>
+                <button id="btn-touch-jump" class="touch-btn touch-action-main" aria-label="Salto">
+                    <span class="touch-btn-icon">⬆</span>
+                    <span class="touch-btn-tag">SALTO</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- NOTIFICACIÓN DE PUNTO DE CONTROL (CHECKPOINT TOAST) -->
+        <div id="checkpoint-toast" class="checkpoint-toast">
+            <span class="cp-icon">🚩</span>
+            <span id="checkpoint-toast-text">¡Punto de Control Guardado!</span>
+        </div>
+
+        <!-- MODAL GAME OVER -->
+        <div id="game-over-modal" class="game-modal">
+            <div class="modal-card modal-hell">
+                <h2>¡OH NO! 👿</h2>
+                <p>Kitty Shelzy ha perdido sus 3 corazones en las garras del Averno.</p>
+                
+                <div id="gameover-newrecord-badge" class="new-record-badge" style="display: none;">
+                    🎉 ¡NUEVO RÉCORD MÁXIMO! 🏆
+                </div>
+
+                <div class="modal-stats-box hell-stats">
+                    <div class="stat-row">
+                        <span>Puntuación de la partida:</span>
+                        <strong id="gameover-score">0</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Récord Máximo (High Score):</span>
+                        <strong id="gameover-highscore">0</strong> 🏆
+                    </div>
+                    <div class="stat-row">
+                        <span>Cupcakes recolectados:</span>
+                        <strong id="gameover-cupcakes">0</strong> 🧁
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn-retry-game primary-hell-btn">🔥 Reintentar desde el Inicio</button>
+                    <button class="btn-goto-map secondary-btn">🗺️ Volver al Mapa de Mundos</button>
+                    <button class="btn-goto-wardrobe secondary-btn">👗 Volver al Vestidor</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL VICTORIA -->
+        <div id="victory-modal" class="game-modal">
+            <div class="modal-card modal-cute">
+                <h2>¡VICTORIA! 🎀🎉</h2>
+                <p id="victory-level-subtitle">¡Kitty Shelzy ha superado el Averno y regresado triunfal al Santuario!</p>
+
+                <!-- Calificación de Estrellas (⭐⭐⭐) estilo Mario Bros -->
+                <div class="victory-stars-wrapper">
+                    <div id="victory-stars-container" class="victory-stars-box">
+                        <span class="vstar star-1">⭐</span>
+                        <span class="vstar star-2">⭐</span>
+                        <span class="vstar star-3">⭐</span>
+                    </div>
+                    <p id="victory-stars-rating-text" class="victory-stars-tag">¡3 Estrellas! ¡Maestra Pastelera!</p>
+                </div>
+
+                <div id="victory-newrecord-badge" class="new-record-badge" style="display: none;">
+                    🎉 ¡NUEVO RÉCORD MÁXIMO! 🏆
+                </div>
+
+                <div class="modal-stats-box cute-stats">
+                    <div class="stat-row">
+                        <span>Puntuación Total Acumulada:</span>
+                        <strong id="victory-score">0</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Récord Máximo (High Score):</span>
+                        <strong id="victory-highscore">0</strong> 🏆
+                    </div>
+                    <div class="stat-row">
+                        <span>Cupcakes dulces recolectados:</span>
+                        <strong id="victory-cupcakes">0</strong> 🧁
+                    </div>
+                    <div class="stat-row">
+                        <span>Corazones restantes:</span>
+                        <strong id="victory-hearts">3</strong> 💖
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button id="btn-next-level" class="primary-cute-btn">🌸 ¡Siguiente Nivel! ➡️</button>
+                    <button class="btn-goto-map secondary-btn">🗺️ Ver Mapa de Mundos</button>
+                    <button class="btn-retry-game secondary-btn">🔄 Rejugar este Nivel</button>
+                    <button class="btn-goto-wardrobe secondary-btn">👗 Cambiar Outfit en Vestidor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Modulares -->
+    <script src="js/audio.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/customization.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
